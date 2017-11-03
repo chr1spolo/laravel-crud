@@ -23,5 +23,5 @@ Route::namespace('Log')->group(function () {
 
     Route::post('post/initLogin', 'Login@Start');
 
-    Route::post('post/initRegister', 'Login@saludo');
+    Route::post('post/initRegister', 'Login@Register');
 });

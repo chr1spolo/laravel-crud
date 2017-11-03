@@ -40,6 +40,13 @@
             font-family: 'Saira', sans-serif;
             font-style: italic;
         }
+        .passNotMatch{
+            border-color: red !important;
+        }
+        input:-webkit-autofill {
+            -webkit-box-shadow: 0 0 0 30px #0a174a inset;
+            -webkit-text-fill-color: #0675d8;
+        }
     </style>
 
 @endsection
@@ -55,11 +62,11 @@
                     <form action="{{ url('post/'.$action) }}" method="post">
                         {{ csrf_field() }}
                         <div class="form-group">
-                            <input type="email" class="form-control form-custom" placeholder="Ingresa tu email">
+                            <input type="email" class="form-control form-custom" name="email" placeholder="Ingresa tu email" required>
                             <small id="emailHelp" class="form-text text-muted">No compartiremos tu email.</small>
                         </div>
                         <div class="form-group">
-                            <input type="password" class="form-control form-custom" placeholder="Ingresa tu contraseña">
+                            <input type="password" class="form-control form-custom" name="password" placeholder="Ingresa tu contraseña" required>
                         </div>
                         @if ($title === 'Logueate')
                             <div class="form-group">
@@ -75,7 +82,7 @@
                             </div>
                         @else
                            <div class="form-group">
-                                <input type="password" class="form-control form-custom" placeholder="Confirma tu contraseña">
+                                <input type="password" name="confirm_password" class="form-control form-custom animated" placeholder="Confirma tu contraseña" required>
                             </div>
                             <div class="form-group">
                                 <span>
@@ -84,6 +91,13 @@
                                     </a>
                                 </span>
                             </div>
+                            @if ($errors->any())
+                                <ul>
+                                    @foreach ($errors->all() as $error)
+                                        <li>{{ $error }}</li>
+                                    @endforeach
+                                </ul>
+                            @endif
                             <div class="form-group">
                                 <input type="submit" class="btn-block btn-outline-primary btn" value="Iniciar sesion">
                             </div>
@@ -95,3 +109,22 @@
     </div>
 
 @endsection
+
+@if ($title != 'Logueate')
+    @section('customJs')
+        <script>
+            $(document).ready(function(){
+                $('input[name=confirm_password]').on('keyup keydown blur' , function(){
+                    if( $(this).val() != $('input[name=password]').val() )
+                    {
+                        $(this).addClass("passNotMatch")
+                    }
+                    else if( $(this).val() == 0 || $(this).val() === $('input[name=password]').val() )
+                    {
+                        $(this).removeClass("passNotMatch")
+                    }
+                })
+            })
+        </script>
+    @endsection
+@endif
